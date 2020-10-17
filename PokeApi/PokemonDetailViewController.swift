@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import SDWebImage
 
 class PokemonDetailViewController: UIViewController {
 
@@ -20,9 +21,7 @@ class PokemonDetailViewController: UIViewController {
 
             self.pokeNameLabel.text = pokemonData.name.capitalized
             self.pokeWeightLabel.text = self.calculateWeightInLbs(from: pokemonData.weight)
-            if let url = URL(string: pokemonData.officialImage) {
-                self.pokeAvatar.load(url: url)
-            }
+            self.pokeAvatar.sd_setImage(with: URL(string: pokemonData.officialImage))
         }
     }
 
