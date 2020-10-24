@@ -1,24 +1,18 @@
 import UIKit
 
-class ViewController: UIViewController {
+class PokemonListViewController: UIViewController {
     
     @IBOutlet weak var pokeCollectionView: UICollectionView!
     
     let pokeDataSource: PokeDataSource = PokeDataSource()
-    var pokemonApi: HTTPRequestProvider?
+
+    lazy var presenter: PokemonListPresenterProtocol = PokemonListPresenter(view: self)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        pokemonApi = PokeApiProvider()
-        pokemonApi?.getAllPokemons { [weak self] pokemonData in
-            guard let `self` = self, let pokemonData = pokemonData else { return }
-            self.pokeDataSource.setPokemonNames(pokemonNames: pokemonData.results)
-            self.pokeCollectionView.reloadData()
-        }
-        
         pokeCollectionView.dataSource = pokeDataSource
         pokeCollectionView.delegate = self
+        presenter.loadInitialPokemonList()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -30,10 +24,17 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: UICollectionViewDelegate {
+extension PokemonListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         let pokemonName = pokeDataSource.getPokemonNames()[indexPath.row].name
         self.performSegue(withIdentifier: "showPokemonInfo", sender: pokemonName)
+    }
+}
+
+extension PokemonListViewController: PokemonListViewProtocol {
+    func refreshPokeCollectionView(with pokemonData: PokemonData) {
+        self.pokeDataSource.setPokemonNames(pokemonNames: pokemonData.results)
+        self.pokeCollectionView.reloadData()
     }
 }
