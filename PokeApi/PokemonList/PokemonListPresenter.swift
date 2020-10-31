@@ -1,11 +1,11 @@
 import Foundation
 
 protocol PokemonListPresenterProtocol {
-    func loadInitialPokemonList()
+    func loadPokemonList(with nextUrl: String?)
 }
 
 protocol PokemonListViewProtocol: class {
-    func refreshPokeCollectionView(with pokemonData: PokemonData)
+    func refreshPokeCollectionView(with pokemonData: PokemonData, nextResults: Bool)
 }
 
 class PokemonListPresenter: PokemonListPresenterProtocol {
@@ -18,15 +18,17 @@ class PokemonListPresenter: PokemonListPresenterProtocol {
         self.view = view
     }
     
-    func loadInitialPokemonList() {
-        pokemonApi.getAllPokemons { [weak self] pokemonData in
+    func loadPokemonList(with nextUrl: String?) {
+        pokemonApi.getPokemonList(nextPokemonUrl: nextUrl) { [weak self] pokemonData in
             guard let `self` = self,
                   let view = self.view,
                   let pokemonData = pokemonData else {
                 print("error loading data")
                 return
             }
-            view.refreshPokeCollectionView(with: pokemonData)
+            
+            let hasNextResults = nextUrl != nil ? true : false
+            view.refreshPokeCollectionView(with: pokemonData, nextResults: hasNextResults)
         }
     }
 }

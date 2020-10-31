@@ -4,15 +4,16 @@ class PokemonListViewController: UIViewController {
     
     @IBOutlet weak var pokeCollectionView: UICollectionView!
     
-    let pokeDataSource: PokeDataSource = PokeDataSource()
+    let collectionViewService: PokemonCollectionViewService = PokemonCollectionViewService()
 
     lazy var presenter: PokemonListPresenterProtocol = PokemonListPresenter(view: self)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        pokeCollectionView.dataSource = pokeDataSource
-        pokeCollectionView.delegate = self
-        presenter.loadInitialPokemonList()
+        collectionViewService.delegate = self
+        
+        pokeCollectionView.register(UINib(nibName: "FooterCell", bundle: nil), forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterCell.CELL_ID)
+        presenter.loadPokemonList(with: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -22,19 +23,30 @@ class PokemonListViewController: UIViewController {
             detailVC.pokemonName = name
         }
     }
+    
+    private func refeshTableView() {
+        
+    }
 }
 
-extension PokemonListViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        let pokemonName = pokeDataSource.getPokemonNames()[indexPath.row].name
-        self.performSegue(withIdentifier: "showPokemonInfo", sender: pokemonName)
+extension PokemonListViewController: PokemonCollectionViewServiceDelegate {
+    func didSelectPokemon(with name: String) {
+        self.performSegue(withIdentifier: "showPokemonInfo", sender: name)
+    }
+    
+    func loadMorePokemons(with nextURL: String) {
+        presenter.loadPokemonList(with: nextURL)
     }
 }
 
 extension PokemonListViewController: PokemonListViewProtocol {
-    func refreshPokeCollectionView(with pokemonData: PokemonData) {
-        self.pokeDataSource.setPokemonNames(pokemonNames: pokemonData.results)
+    func refreshPokeCollectionView(with pokemonData: PokemonData, nextResults: Bool) {
+        if !nextResults {
+            self.pokeCollectionView.dataSource = collectionViewService
+            self.pokeCollectionView.delegate = collectionViewService
+        }
+        self.collectionViewService.setPokemonNames(pokemonNames: pokemonData, nextResults: nextResults)
+        self.pokeCollectionView.collectionViewLayout.invalidateLayout()
         self.pokeCollectionView.reloadData()
     }
 }
