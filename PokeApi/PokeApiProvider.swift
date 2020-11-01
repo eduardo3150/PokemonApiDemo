@@ -37,11 +37,15 @@ struct PokemonData: Decodable {
         let name: String
         let url: String
     }
+
+    static func empty() -> PokemonData {
+        return PokemonData(next: nil, previous: nil, results: [])
+    }
 }
 
 protocol HTTPRequestProvider {
     func getPokemonBy(name: String, completionHandler: @escaping (PokemonDetailInfo?)->())
-    func getAllPokemons(completionHandler: @escaping (PokemonData?)->())
+    func getPokemonList(with resultTypeURL: String?, completionHandler: @escaping (PokemonData?)->())
 }
 
 class PokeApiProvider: HTTPRequestProvider {
@@ -70,8 +74,12 @@ class PokeApiProvider: HTTPRequestProvider {
         }
     }
     
-    func getAllPokemons(completionHandler: @escaping (PokemonData?) -> ()) {
-        let url = "\(baseURL)?limit=150"
+    func getPokemonList(with resultTypeURL: String?, completionHandler: @escaping (PokemonData?) -> ()) {
+        var url = "\(baseURL)?limit=50"
+
+        if let resultURL = resultTypeURL {
+            url = resultURL
+        }
         
         AF.request(url, method: .get)
             .validate(statusCode: 200..<300)

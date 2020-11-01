@@ -11,12 +11,12 @@ class PokeDataSource: NSObject, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PokemonCell.cellId, for: indexPath) as? PokemonCell {
             let currentItem = pokemonNames[indexPath.row]
-            cell.configure(pokemonData: currentItem, imageId: indexPath.row + 1)
+            let imageId = getImageIdFromURL(currentItem: currentItem)
+            cell.configure(pokemonData: currentItem, imageId: imageId)
             return cell
         }
         return UICollectionViewCell()
     }
-    
     
     public func getPokemonNames() -> [PokemonData.PokemonResult] {
         return pokemonNames
@@ -24,5 +24,14 @@ class PokeDataSource: NSObject, UICollectionViewDataSource {
     
     public func setPokemonNames(pokemonNames: [PokemonData.PokemonResult])  {
         self.pokemonNames = pokemonNames
+    }
+
+    private func getImageIdFromURL(currentItem: PokemonData.PokemonResult) -> Int {
+        var url = currentItem.url.split(separator: "/")
+        if let lastElement = url.popLast() {
+            let lastElementStr = String(lastElement)
+            return Int(lastElementStr) ?? 0
+        }
+        return 0
     }
 }

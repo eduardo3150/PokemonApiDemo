@@ -3,6 +3,8 @@ import UIKit
 class PokemonListViewController: UIViewController {
     
     @IBOutlet weak var pokeCollectionView: UICollectionView!
+    @IBOutlet weak var previousResultsButton: UIButton!
+    @IBOutlet weak var nextResultsButton: UIButton!
     
     let pokeDataSource: PokeDataSource = PokeDataSource()
 
@@ -22,6 +24,12 @@ class PokemonListViewController: UIViewController {
             detailVC.pokemonName = name
         }
     }
+    @IBAction func didSelectPreviousResults(_ sender: Any) {
+        presenter.fetchMoreResults(for: .previous)
+    }
+    @IBAction func didSelectNextResults(_ sender: Any) {
+        presenter.fetchMoreResults(for: .next)
+    }
 }
 
 extension PokemonListViewController: UICollectionViewDelegate {
@@ -33,6 +41,11 @@ extension PokemonListViewController: UICollectionViewDelegate {
 }
 
 extension PokemonListViewController: PokemonListViewProtocol {
+    func enableButtonLoading(for buttonVisibility: ButtonVisibility) {
+        previousResultsButton.isHidden = buttonVisibility.0
+        nextResultsButton.isHidden = buttonVisibility.1
+    }
+
     func refreshPokeCollectionView(with pokemonData: PokemonData) {
         self.pokeDataSource.setPokemonNames(pokemonNames: pokemonData.results)
         self.pokeCollectionView.reloadData()
