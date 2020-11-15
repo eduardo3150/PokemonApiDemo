@@ -2,11 +2,13 @@ import Foundation
 import Alamofire
 
 struct PokemonDetailInfo: Decodable {
+    let id: Int
     let name: String
     let officialImage: String
     let weight: Int
     
     enum CodingKeys: String, CodingKey {
+        case id
         case name
         case weight
         case sprites
@@ -22,6 +24,7 @@ struct PokemonDetailInfo: Decodable {
         let otherSprites = try spritesContainer.nestedContainer(keyedBy: CodingKeys.self, forKey: .other)
         let officialArtwork = try otherSprites.nestedContainer(keyedBy: CodingKeys.self, forKey: .officialArtwork)
 
+        id = try values.decode(Int.self, forKey: .id)
         name = try values.decode(String.self, forKey: .name)
         weight = try values.decode(Int.self, forKey: .weight)
         officialImage = try officialArtwork.decode(String.self, forKey: .frontDefault)
@@ -49,10 +52,10 @@ protocol HTTPRequestProvider {
 }
 
 class PokeApiProvider: HTTPRequestProvider {
-    let baseURL: String = "https://pokeapi.co/api/v2/pokemon/"
+    static let baseURL: String = "https://pokeapi.co/api/v2/pokemon/"
     
     func getPokemonBy(name: String, completionHandler: @escaping (PokemonDetailInfo?)->()) {
-        AF.request("\(baseURL)\(name)", method: .get, encoding:  JSONEncoding.default)
+        AF.request("\(PokeApiProvider.baseURL)\(name.lowercased())", method: .get, encoding:  JSONEncoding.default)
             .validate(statusCode: 200..<300)
             .responseData { response in
                 
@@ -75,7 +78,7 @@ class PokeApiProvider: HTTPRequestProvider {
     }
     
     func getPokemonList(with resultTypeURL: String?, completionHandler: @escaping (PokemonData?) -> ()) {
-        var url = "\(baseURL)?limit=50"
+        var url = "\(PokeApiProvider.baseURL)?limit=50"
 
         if let resultURL = resultTypeURL {
             url = resultURL

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bj5-tr-BVR">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bj5-tr-BVR">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17125"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
@@ -102,21 +102,44 @@
                                     <constraint firstAttribute="height" constant="60" id="vjF-Nq-F74"/>
                                 </constraints>
                             </stackView>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6NJ-zC-JEa">
+                                <rect key="frame" x="32" y="398" width="350" height="100"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NPA-CU-Bcw">
+                                        <rect key="frame" x="148.5" y="35" width="53" height="30"/>
+                                        <state key="normal" title="Refresh"/>
+                                        <connections>
+                                            <action selector="loadQueryFromSearchBar:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XGg-y5-Q8N"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="NPA-CU-Bcw" firstAttribute="centerX" secondItem="6NJ-zC-JEa" secondAttribute="centerX" id="Rh8-oZ-JK7"/>
+                                    <constraint firstAttribute="height" constant="100" id="lbs-oR-Q3r"/>
+                                    <constraint firstItem="NPA-CU-Bcw" firstAttribute="centerY" secondItem="6NJ-zC-JEa" secondAttribute="centerY" id="zGQ-AJ-i16"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="6NJ-zC-JEa" secondAttribute="trailing" constant="32" id="3FG-93-0Zw"/>
                             <constraint firstItem="NI6-nJ-e6L" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="Elr-6A-qQo"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="NI6-nJ-e6L" secondAttribute="trailing" constant="16" id="Qgm-wx-AOk"/>
                             <constraint firstItem="HRF-VR-W61" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="U78-3x-LYN"/>
                             <constraint firstItem="HRF-VR-W61" firstAttribute="top" secondItem="NI6-nJ-e6L" secondAttribute="bottom" constant="16" id="UvB-ON-MpA"/>
                             <constraint firstItem="NI6-nJ-e6L" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="16" id="aKO-EK-6iQ"/>
+                            <constraint firstItem="6NJ-zC-JEa" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="32" id="fsZ-gs-xbW"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="HRF-VR-W61" secondAttribute="trailing" id="pjd-TO-5Ch"/>
+                            <constraint firstItem="6NJ-zC-JEa" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="qr9-GB-Fgc"/>
+                            <constraint firstItem="6NJ-zC-JEa" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="v7v-PX-aRz"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="HRF-VR-W61" secondAttribute="bottom" id="ybt-Rz-vqd"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="PokeApp" id="ela-0E-Q18"/>
                     <connections>
+                        <outlet property="emptyListContainer" destination="6NJ-zC-JEa" id="OF6-2l-xPM"/>
                         <outlet property="nextResultsButton" destination="shd-3P-CtL" id="CLh-2x-pjK"/>
                         <outlet property="pokeCollectionView" destination="HRF-VR-W61" id="7gn-6I-fpP"/>
                         <outlet property="previousResultsButton" destination="TRE-oo-OU3" id="UQK-rQ-egn"/>
